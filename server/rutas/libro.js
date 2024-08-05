@@ -16,4 +16,7 @@ module.exports = (app) => {
 
     app.route('/api/updateLibro')
         .post(pedCtrl.updateLibro);
+
+    app.route('/api/valUsu')
+        .post(pedCtrl.valUsu);
 }

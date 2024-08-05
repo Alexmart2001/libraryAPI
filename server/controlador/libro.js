@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Libro = require("../modelo/libro");
+const axios = require("axios");
 
 exports.getAllLibros = function (req, res) {
     try {
@@ -121,6 +122,36 @@ exports.updateLibro = function (req, res) {
         res.status(500).send({msg: "ER", info: "Error interno del servidor"});
     }
 };
+
+
+async function valToken(token, res) {
+    try {
+        const { accessToken } = token;
+        const rta = await axios.get(`https://graph.facebook.com/me?access_token=${accessToken}`);
+        const userData = rta.data;
+
+        console.log("status ===> ", rta.status);
+        console.log("data ===> ", userData);
+        console.log("headers ====> ", rta.headers);
+
+        res.send({msg: "OK", info: "Autorizado"});
+    } catch (error) {
+        console.log("ERROR: " + error.message);
+        res.status(401).send({msg: "ER", info: "Acceso denegado"});
+    }
+}
+
+exports.valUsu = function (req, res) {
+    console.log("i-----------------------");
+    console.log("body: ", req.body.accessToken);
+
+    const token = { accessToken: req.body.accessToken };
+    valToken(token, res);
+
+    console.log("f--------------------");
+};
+
+
 
 
 
